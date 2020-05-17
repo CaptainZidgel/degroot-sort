@@ -4,8 +4,30 @@ import os
 import struct
 import io
 import json
-
+import re
 from sys import *
+
+#################################################
+
+s_support = False
+try:
+	import vserv
+	s_support = True
+except ModuleNotFoundError:
+	s_support = False
+
+aliases = {}
+with open("Aliases.json", "r") as a:
+	a = a.read()
+	aliases = json.loads(a)
+	for alias in aliases['plain']:
+		a = aliases['plain'][alias]
+		aliases[alias] = set(a)	
+
+if not 'valve' in aliases['plain'] and s_support == True:
+	aliases['plain']['valve'] = vserv.unfurl_relays()
+
+#################################################
 
 #Search a directory for files
 def searchdir(_dir):
@@ -35,6 +57,17 @@ def unfurl(path):
 	d['date'] = ym[:7] #store the date in the dictionary. This is a slice: slices are string/array/other-compatible-object[start:stop]
 	d['name'] = ym
 
+	#determine what servergroup a demo is in
+	for group in aliases['plain']:
+		g = set(aliases['plain'][group])
+		if d['servername'].replace("@", ":") in g or d['servername'].split("@")[0] in g:
+			d['sgroup'] = group
+	for rule in aliases['regex']:
+		if re.fullmatch(aliases['regex'][rule], d['servername'].replace("@", ":")):
+			d['sgroup'] = rule
+	if 'sgroup' not in d:
+			d['sgroup'] = "other"
+
 	#depending on what you use as a demo recorder and how you configurate it, events are stored in different ways. The in game recorder stores JSON files.
 	with open(path.replace(".dem", ".json")) as f:
 		e = json.loads(f.read())['events']
@@ -55,8 +88,17 @@ def unfurl_dir(path):
 
 #turn a prototype matrix into a real matrix string
 def assemble_matrix(prototype, demo):
-	matrix = [demo[a] for a in prototype]
+	#matrix = [demo[a] for a in prototype]
+	matrix = []
+	for item in prototype:
+		if item == "sag" or item == "sag*":
+			matrix.append(demo['sgroup'])
+			if item == "sag*" and demo['sgroup'] == "other":
+				matrix.append(demo['servername'])
+		else:
+			matrix.append(demo[item])
 	matrix = os.sep.join(matrix)
+	print(prototype, matrix)
 	return matrix
 
 #make dirs recursively, move file. path = root folder, demo = actual file 
@@ -76,23 +118,3 @@ def flatten(path, to):
 		for filename in files:
 			if os.path.splitext(filename)[1] == ".dem" or os.path.splitext(filename)[1] == ".json":
 				os.renames(os.path.join(root, filename), os.path.join(to, filename))
-
-"""
-if argv[1] == "unfurl":
-	storage_matrix = []
-	storage_matrix.append('map')
-	storage_matrix.append('date')
-	storage_matrix.append('servername')
-
-	for f in unfurl_dir(argv[2]):
-		#make_and_move(storage_matrix, f)
-		m = assemble_matrix(storage_matrix, f)
-		move("demos_tiny", m, f)
-
-if argv[1] == "flatten":
-	flatten(argv[2], argv[3])
-
-if argv[1] == "info":
-	for f in unfurl_dir(argv[2]):
-		print(f['name'], f['ticks'])
-"""

@@ -38,14 +38,14 @@ showsrc = ttk.Label(root, textvariable=src)
 showsrc.grid(column=2, row=1, padx=25, in_ = frame1)
 
 #Orderability - I am mentally incapable of creating some sort of fancy, intuitive drag and drop UI - it will be far easier for me and the user to just have a text box.
-m_label = ttk.Label(root, wraplength=800, text="Write your pattern here. Pattern must be keywords, separated by spaces. Example:\nclientname map servername\nThis will create directories: root/tavish/ctf_2fort/127.0.0.1")
+m_label = ttk.Label(root, wraplength=800, text="Write your pattern here. Pattern must be keywords, separated by spaces. Example:\nclientname map servername\nThis will create directories like: source/tavish/ctf_2fort/127.0.0.1")
 m_label.grid(column=1, row=2, columnspan=15, in_ = frame1, pady=(25, 0))
 write_matrix = ttk.Entry(root, width=100)
 write_matrix.grid(column=1, row=3, columnspan=15, pady=10, in_ = frame1)
-option_label = ttk.Label(root, text="Options:\nservername\nclientname\nmap\ndate [year-month]\neventful [are there recorded events?]")
+option_label = ttk.Label(root, text="Options:\nservername\nclientname\nmap\ndate [yyyy-mm, requires your files are appropriately named]\neventful [are there recorded events?]\n\nAdvanced options:\nsag [Server Alias Groups]\nsag* [SAG: store 'other' servers in other/servername]")
 option_label.grid(column=0, row=4, rowspan=4)
 
-m_rule = {"servername", "clientname", "map", "date", "game", "demproto", "netproto", "eventful"}	#A set of options you could use
+m_rule = {"servername", "clientname", "map", "date", "game", "demproto", "netproto", "eventful", "sag", "sag*"}	#A set of options you could use
 def verify_matrix():
 	m = write_matrix.get()
 	m = set(m.split())
