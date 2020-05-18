@@ -5,7 +5,7 @@ Almost all dependencies are standard library (use python3):  \
 `io, sys, re, json, struct, os`  \
 The exception is:  \
 tkinter - If you wish to use the UI. But if you mess around with the code enough, it won't be hard to ignore ui.py and write this as a command line tool.  \
-vserv - If you wish to parse a json file of valve server ranges into an alias group, you'll need https://gist.github.com/CaptainZidgel/bfec2064e27a29227e91e6cfceeb797a Save it as `vserv.py`  \
+vserv (included) - If you wish to parse a json file of valve server ranges into an alias group, you'll need this, but you can delete it with no consequences. Code has contingencies to avoid erroring if you remove this.  \
 Executables coming SoonTM
 
 ## File requirements
