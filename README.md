@@ -1,12 +1,14 @@
 # Sort Demo Files
+I created this for my own uses and it now works. If I were to try and keep going to make this a user friendly, useful utility, I would go crazy and the code would spiral into spaghetti.
+I do not intend to support this any more - except for potentially supporting new event storage types.
+I do not recommend using this unless you really understand what you're doing.
 
 ## Dependencies
 Almost all dependencies are standard library (use python3):  \
 `io, sys, re, json, struct, os`  \
 The exception is:  \
 tkinter - If you wish to use the UI. But if you mess around with the code enough, it won't be hard to ignore ui.py and write this as a command line tool.  \
-vserv (included) - If you wish to parse a json file of valve server ranges into an alias group, you'll need this, but you can delete it with no consequences. Code has contingencies to avoid erroring if you remove this.  \
-Executables coming SoonTM
+vserv (included) - If you wish to parse a json file of valve server ranges (not included) into an alias group, you'll need this, but you can delete it with no consequences. Code has contingencies to avoid erroring if you remove this.
 
 ## File requirements
 See Usage.
@@ -28,7 +30,7 @@ Click the submit button to format. On Unix, you can use `ls -R` to quickly see y
 The library/UI also features an option called flatten - it will move every json and dem file from their subfolders back to the source folder, deleting any folder left empty.
 
 ## Server Aliasing
-Create an `Aliases.json` file. Syntax:
+Create an `Aliases.json` file. Place it wherever your installation is. Syntax:
 ```json
 {
 	"regex": {

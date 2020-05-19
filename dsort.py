@@ -17,15 +17,18 @@ except ModuleNotFoundError:
 	s_support = False
 
 aliases = {}
-with open("Aliases.json", "r") as a:
-	a = a.read()
-	aliases = json.loads(a)
-	for alias in aliases['plain']:
-		a = aliases['plain'][alias]
-		aliases[alias] = set(a)	
+try:
+	with open("Aliases.json", "r") as a:
+		a = a.read()
+		aliases = json.loads(a)
+		for alias in aliases['plain']:
+			a = aliases['plain'][alias]
+			aliases[alias] = set(a)	
 
-if not 'valve' in aliases['plain'] and s_support == True:
-	aliases['plain']['valve'] = vserv.unfurl_relays()
+	if not 'valve' in aliases['plain'] and s_support == True:
+		aliases['plain']['valve'] = vserv.unfurl_relays()
+except FileNotFoundError:
+	print("No alias file found")
 
 #################################################
 
@@ -58,15 +61,19 @@ def unfurl(path):
 	d['name'] = ym
 
 	#determine what servergroup a demo is in
-	for group in aliases['plain']:
-		g = set(aliases['plain'][group])
-		if d['servername'].replace("@", ":") in g or d['servername'].split("@")[0] in g:
-			d['sgroup'] = group
-	for rule in aliases['regex']:
-		if re.fullmatch(aliases['regex'][rule], d['servername'].replace("@", ":")):
-			d['sgroup'] = rule
-	if 'sgroup' not in d:
-			d['sgroup'] = "other"
+	try:
+		for group in aliases['plain']:
+			g = set(aliases['plain'][group])
+			if d['servername'].replace("@", ":") in g or d['servername'].split("@")[0] in g:
+				d['sgroup'] = group
+		for rule in aliases['regex']:
+			if re.fullmatch(aliases['regex'][rule], d['servername'].replace("@", ":")):
+				d['sgroup'] = rule
+		if 'sgroup' not in d:
+				d['sgroup'] = "other"
+	except KeyError:
+		pass
+		#"Error processing aliases. This is expected behavior if you don't have an Aliases.json file"
 
 	#depending on what you use as a demo recorder and how you configurate it, events are stored in different ways. The in game recorder stores JSON files.
 	with open(path.replace(".dem", ".json")) as f:
@@ -114,6 +121,7 @@ def move(path, matrix, demo):
 
 #move everything inside to the root
 def flatten(path, to):
+	print("Flattening", path)
 	for root, subdir, files in os.walk(path):
 		for filename in files:
 			if os.path.splitext(filename)[1] == ".dem" or os.path.splitext(filename)[1] == ".json":
