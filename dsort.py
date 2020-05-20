@@ -76,12 +76,15 @@ def unfurl(path):
 		#"Error processing aliases. This is expected behavior if you don't have an Aliases.json file"
 
 	#depending on what you use as a demo recorder and how you configurate it, events are stored in different ways. The in game recorder stores JSON files.
-	with open(path.replace(".dem", ".json")) as f:
-		e = json.loads(f.read())['events']
-		if len(e) > 0:
-			d['eventful'] = "eventful"
-		else:
-			d['eventful'] = "not-eventful"
+	try:
+		with open(path.replace(".dem", ".json")) as f:
+			e = json.loads(f.read())['events']
+			if len(e) > 0:
+				d['eventful'] = "eventful"
+			else:
+				d['eventful'] = "not-eventful"
+	except FileNotFoundError:
+		d['eventful'] = "no-event-info"
 	
 	return d
 

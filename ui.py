@@ -60,7 +60,7 @@ def execute_unfurl():
 		for f in files:
 			m = degroot.assemble_matrix(write_matrix.get().split(), f)
 			degroot.move(src.get(), m, f)				
-
+		print("Finished sorting!")
 	else:
 		print("Error")
 
