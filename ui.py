@@ -63,11 +63,21 @@ def execute_unfurl():
 		print("Finished sorting!")
 	else:
 		print("Error")
-
+		
+def probe_dir(dir):
+	f = degroot.unfurl_dir(dir)
+	for d in f:
+		print("{} s: {} <- {} | {}, {}, len: secs {}, ticks {} name: {}".format(d['name'], d['sgroup'], d['servername'], d['eventful'], d['map'], d['time'], d['ticks'], d['clientname']))
+		print("\n")
+	print("Finished probe")
+		
 submit = ttk.Button(root, text="Submit", command=execute_unfurl)
 submit.grid(column=0, row=10, pady=15)
 
 flatten = ttk.Button(root, text="Flatten source directory", command=lambda: degroot.flatten(src.get(), src.get()))
 flatten.grid(column=0, row=11, pady=15)
+
+probe = ttk.Button(root, text="Probe directory", command=lambda: probe_dir(src.get()))
+probe.grid(column=0, row=12)
 
 root.mainloop()
