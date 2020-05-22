@@ -5,32 +5,24 @@ import struct
 import io
 import json
 import re
+import vserv
 from sys import *
 
-#################################################
-
-s_support = False
-try:
-	import vserv
-	s_support = True
-except ModuleNotFoundError:
-	s_support = False
-
 aliases = {}
-try:
-	with open("Aliases.json", "r") as a:
-		a = a.read()
-		aliases = json.loads(a)
-		for alias in aliases['plain']:
-			a = aliases['plain'][alias]
-			aliases[alias] = set(a)	
-
-	if not 'valve' in aliases['plain'] and s_support == True:
-		aliases['plain']['valve'] = vserv.unfurl_relays()
-except FileNotFoundError:
-	print("No alias file found")
-
-#################################################
+def load_aliases():
+	try:
+		with open("Aliases.json", "r") as a:
+			a = a.read()
+			aliases = json.loads(a)
+			for alias in aliases['plain']:
+				a = aliases['plain'][alias]
+				aliases[alias] = set(a)	
+		x = input("Do you want to add a server alias group for Valve servers? (y/n)\n>")
+		if x == 'y' and not 'valve' in aliases['plain']:
+			print("OK. Processing valve servers.")
+			aliases['plain']['valve'] = vserv.unfurl_relays()
+	except FileNotFoundError:
+		print("No alias file found. Place 'Aliases.json' in the same folder you're running this form.")
 
 #Search a directory for files
 def searchdir(_dir):
@@ -72,7 +64,7 @@ def unfurl(path):
 		if 'sgroup' not in d:
 				d['sgroup'] = "other"
 	except KeyError:
-		pass
+		d['sgroup'] = "NOGROUP"
 		#"Error processing aliases. This is expected behavior if you don't have an Aliases.json file"
 
 	#depending on what you use as a demo recorder and how you configurate it, events are stored in different ways. The in game recorder stores JSON files.
@@ -108,14 +100,13 @@ def assemble_matrix(prototype, demo):
 		else:
 			matrix.append(demo[item])
 	matrix = os.sep.join(matrix)
-	print(prototype, matrix)
+	print(matrix, demo["name"])
 	return matrix
 
 #make dirs recursively, move file. path = root folder, demo = actual file 
 def move(path, matrix, demo):
 	target = os.path.join(path, matrix)
 	j_p = demo['name'].replace(".dem", ".json")
-	print(target)
 	os.renames(os.path.join(path, demo['name']), os.path.join(target, demo['name']))	#move the demo
 	try:
 		os.renames(os.path.join(path, j_p), os.path.join(target, j_p))	#move the JSON
