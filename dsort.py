@@ -8,8 +8,9 @@ import re
 import vserv
 from sys import *
 
-aliases = {}
-def load_aliases():
+global aliases
+def load_aliases(skip_ask=False):
+	aliases = {}
 	try:
 		with open("Aliases.json", "r") as a:
 			a = a.read()
@@ -17,12 +18,14 @@ def load_aliases():
 			for alias in aliases['plain']:
 				a = aliases['plain'][alias]
 				aliases[alias] = set(a)	
-		x = input("Do you want to add a server alias group for Valve servers? (y/n)\n>")
-		if x == 'y' and not 'valve' in aliases['plain']:
+		if skip_ask == False:
+			x = input("Do you want to add a server alias group for Valve servers? (y/n)\n>")
+		if skip_ask or x == 'y' and not 'valve' in aliases['plain']:
 			print("OK. Processing valve servers.")
 			aliases['plain']['valve'] = vserv.unfurl_relays()
 	except FileNotFoundError:
 		print("No alias file found. Place 'Aliases.json' in the same folder you're running this form.")
+	return aliases
 
 #Search a directory for files
 def searchdir(_dir):
@@ -61,11 +64,12 @@ def unfurl(path):
 		for rule in aliases['regex']:
 			if re.fullmatch(aliases['regex'][rule], d['servername'].replace("@", ":")):
 				d['sgroup'] = rule
-		if 'sgroup' not in d:
-				d['sgroup'] = "other"
-	except KeyError:
+	except (KeyError, NameError):
 		d['sgroup'] = "NOGROUP"
-		#"Error processing aliases. This is expected behavior if you don't have an Aliases.json file"
+		#"Error processing aliases. Key Error: This is expected behavior if you don't have an Aliases.json file"
+		#Name Error: Aliases file hasn't been loaded yet. Expected behavior if SAG was not included in matrix.
+	if 'sgroup' not in d:
+			d['sgroup'] = "other"
 
 	#depending on what you use as a demo recorder and how you configurate it, events are stored in different ways. The in game recorder stores JSON files.
 	try:

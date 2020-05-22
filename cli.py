@@ -29,6 +29,7 @@ rules = {"servername", "clientname", "map", "date", "game", "demproto", "netprot
 if m == "f":
 	degroot.flatten(src, src)
 elif m == "p":
+	degroot.aliases = degroot.load_aliases(True)
 	f = degroot.unfurl_dir(src)
 	for d in f:
 		print("{} s: {} <- {} | {}, {}, len: secs {}, ticks {} name: {}\n".format(d['name'], d['sgroup'], d['servername'], d['eventful'], d['map'], d['time'], d['ticks'], d['clientname']))
@@ -52,7 +53,7 @@ sag* - [advanced] Use a server alias group. Others are placed in folder "other/s
 	if keywordset <= rules:	#if keywordset is a subset of rules
 		print("Keywords accepted, beginning sort...")
 		if "sag" in keywordset or "sag*" in keywordset:
-			degroot.load_aliases()
+			degroot.aliases = degroot.load_aliases()
 		files = degroot.unfurl_dir(src)
 		for f in files:
 			matrix = degroot.assemble_matrix(keywords.split(), f)
