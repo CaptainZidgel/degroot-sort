@@ -15,7 +15,7 @@ Please note this will (possibly?) erase file metadata like created/last-modified
 Please note this could render files unusable on other platforms depending on how Python handles their binary files (but when do you move demos to other platforms, anyway?) \
 Windows: `python ui.py` or `python cli.py` (on Linux, use `python3` or whatever you have python3 installed under) \
 Select a source directory: This will be the source of your files and where your files are organized.  \
-The program will ask you to write a long template string (called a "Matrix") for assembling your folders. It is read left to read and separated by spaces. Options:  \
+The program will ask you to write a long template string (called a "Matrix") for assembling your folders. It is read left to right and separated by spaces. Options:  \
 `servername` This is not the title of the server, it is the hostname and port you use to connect.  \
 `clientname` This is your in game name. I do not know if this is recorded at the start of recording or the end.  \
 `map` The map name  \
@@ -44,5 +44,5 @@ Create an `Aliases.json` file. Place it wherever your installation is (sibling w
 	}
 }
 ```
-I haven't tested it without using both groups, but if you don't want plain just leave whatever it is as `"plain": {}` and it should be fine.
-
+I haven't tested it without using both groups, but if you don't want plain just leave whatever it is as `"plain": {}` and it should be fine.  \
+If you wish to create a server alias group for Valve servers, you will need a NetworkDatagramConfig.json file. Same dir as everything else. If you are interested and need a link, please raise an issue.

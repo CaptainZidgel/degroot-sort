@@ -4,7 +4,7 @@ import tkinter.ttk as ttk
 import dsort as degroot
 import os
 
-degroot.load_aliases()
+degroot.aliases = degroot.load_aliases()
 
 #Assemble a root window
 root = tk.Tk()

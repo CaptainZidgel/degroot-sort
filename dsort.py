@@ -18,13 +18,10 @@ def load_aliases(skip_ask=False):
 			for alias in aliases['plain']:
 				a = aliases['plain'][alias]
 				aliases[alias] = set(a)	
-		if skip_ask == False:
-			x = input("Do you want to add a server alias group for Valve servers? (y/n)\n>")
-		if skip_ask or x == 'y' and not 'valve' in aliases['plain']:
-			print("OK. Processing valve servers.")
+		if not 'valve' in aliases['plain']:
 			aliases['plain']['valve'] = vserv.unfurl_relays()
 	except FileNotFoundError:
-		print("No alias file found. Place 'Aliases.json' in the same folder you're running this form.")
+		print("No alias file found. If you wish to sort servers by groups, place 'Aliases.json' in the same folder you're running this from.")
 	return aliases
 
 #Search a directory for files
