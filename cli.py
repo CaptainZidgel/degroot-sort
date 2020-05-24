@@ -64,3 +64,4 @@ sag* - [advanced] Use a server alias group. Others are placed in folder "other/s
 else:
 	print("This shouldn't have happened. What did you DO? m = ", m)
 	exit()
+_ = input("You can press enter to close this program now.")
