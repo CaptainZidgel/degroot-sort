@@ -6,8 +6,8 @@ I do not recommend using this unless you really understand what you're doing.
 ## Dependencies
 Almost all dependencies are standard library. Use the latest version of Python 3. Works on at least 3.6:  \
 `io, sys, re, json, struct, os`  \
-The exception is:  \
-tkinter(3) is a requirement if you wish to use `ui.py`, but `cli.py` is much better and the way to go.
+The only external dependency is:  \
+tkinter(3), if you wish to use `ui.py`, but `cli.py` is much better and the way to go.
 
 ## Usage
 ### Sorting
@@ -25,11 +25,7 @@ The program will ask you to write a long template string (called a "Matrix") for
 `sag*` Use server aliasing - Anything with no alias will be stored in `other/servername/_rest_of_matrix`  \
 Click the submit button to format. On Unix, you can use `ls -R` to quickly see your new folders.
 
-### Flatten and Probe
-flatten will move every json and dem file from their subfolders back to the source folder, deleting any folder left empty.  \
-probe will print out select information on every single demo file in a directory, be careful as this could be a lot if you have a giant demo folder.
-
-## Server Aliasing
+### Server Aliasing
 Create an `Aliases.json` file. Place it wherever your installation is (sibling with the python scripts). Syntax:
 ```json
 {
@@ -46,3 +42,21 @@ Create an `Aliases.json` file. Place it wherever your installation is (sibling w
 ```
 I haven't tested it without using both groups, but if you don't want plain just leave whatever it is as `"plain": {}` and it should be fine.  \
 If you wish to create a server alias group for Valve servers, you will need a NetworkDatagramConfig.json file. Same dir as everything else. If you are interested and need a link, please raise an issue.
+
+### Flatten, Probe, Index
+flatten will move every json and dem file from their subfolders back to the source folder, deleting any folder left empty.  \
+probe will print out select information on every single demo file in a directory, be careful as this could be a lot if you have a giant demo folder.  
+index will create a txt file that contains a visual tree of your source folder. Example:  
+```
+root\
+--DIR1\
+----DIRA\
+------A			#file
+----DIRB\
+------B
+--DIR2\
+----DIRC\
+------C
+----DIRD\
+------D
+```

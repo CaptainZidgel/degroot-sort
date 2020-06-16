@@ -73,7 +73,7 @@ sag* - [advanced] Use a server alias group. Others are placed in folder "other/s
 		print("Error: Unknown keyword")
 elif m == "i":
 	print("This will output a dg_index.txt file to your current directory, overwriting any previous edition that might exist.")
-	yn = input("Continue? y/n >")
+	yn = input("Continue? (y/n)")
 	if yn.lower() == "y":
 		ignore = input("Hide JSON files from the index? (y/n)")
 		if ignore.lower() == "y":
