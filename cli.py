@@ -1,4 +1,5 @@
 import dsort as degroot
+import index
 import vserv
 import os
 
@@ -9,7 +10,7 @@ if not os.path.isdir(src):
 src = os.path.abspath(src)
 
 def getMethod():
-	method = input("What do you want to do with this directory? (Sort/Flatten/Probe)\n>")
+	method = input("What do you want to do with this directory? (Sort/Flatten/Probe/Index/Help)\n>")
 	m = method.lower()
 	if m == "sort" or m == "s":
 		return 's'
@@ -17,8 +18,17 @@ def getMethod():
 		return 'f'
 	elif m == "probe" or m == "p":
 		return 'p'
+	elif m == "index" or m == "i":
+		return 'i'
+	elif m == "help" or m == "h":
+		print("""
+SORT 		=> Place demos into folders based on your own designed tree
+FLATTEN => Move all files from subdirs into root dir
+PROBE 	=> Get quick information on files in dir
+INDEX 	=> Output a .txt file with a formatted file tree (see your tree at a glance)
+					""")
 	else:
-		print("Unknown method '{}'. Try: sort flatten probe (or s f p)".format(m))
+		print("Unknown method '{}'. Try: sort flatten probe index (OR: s f p i)".format(m))
 		return getMethod()
 
 m = getMethod()
@@ -61,6 +71,17 @@ sag* - [advanced] Use a server alias group. Others are placed in folder "other/s
 		print("Finished sorting.")
 	else:
 		print("Error: Unknown keyword")
+elif m == "i":
+	print("This will output a dg_index.txt file to your current directory, overwriting any previous edition that might exist.")
+	yn = input("Continue? y/n >")
+	if yn.lower() == "y":
+		ignore = input("Hide JSON files from the index? (y/n)")
+		if ignore.lower() == "y":
+			ignore = {".json"}
+		else:
+			ignore = {}
+		print("Creating Index...")
+		index.createIndex(src, ignore)
 else:
 	print("This shouldn't have happened. What did you DO? m = ", m)
 	exit()

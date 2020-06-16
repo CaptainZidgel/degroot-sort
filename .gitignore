@@ -1,5 +1,7 @@
 __pycache__/
 demos_tiny/
+recur/
 dist/
 *.sh
 *.json
+*.txt
