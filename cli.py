@@ -22,11 +22,12 @@ def getMethod():
 		return 'i'
 	elif m == "help" or m == "h":
 		print("""
-SORT 		=> Place demos into folders based on your own designed tree
+SORT 	=> Place demos into folders based on your own designed tree
 FLATTEN => Move all files from subdirs into root dir
 PROBE 	=> Get quick information on files in dir
 INDEX 	=> Output a .txt file with a formatted file tree (see your tree at a glance)
 					""")
+		return getMethod()
 	else:
 		print("Unknown method '{}'. Try: sort flatten probe index (OR: s f p i)".format(m))
 		return getMethod()
@@ -72,7 +73,7 @@ sag* - [advanced] Use a server alias group. Others are placed in folder "other/s
 	else:
 		print("Error: Unknown keyword")
 elif m == "i":
-	print("This will output a dg_index.txt file to your current directory, overwriting any previous edition that might exist.")
+	print("This will output a dg_index.txt file to the given directory, overwriting any previous edition that might exist.")
 	yn = input("Continue? (y/n)")
 	if yn.lower() == "y":
 		ignore = input("Hide JSON files from the index? (y/n)")
