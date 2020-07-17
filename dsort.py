@@ -78,6 +78,9 @@ def unfurl(path):
 				d['eventful'] = "not-eventful"
 	except FileNotFoundError:
 		d['eventful'] = "no-event-info"
+	except json.JSONDecodeError:
+                d['eventful'] = "broken-json"
+                print("Warning: Error in JSON file for {}".format(ym))
 	
 	return d
 
