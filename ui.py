@@ -44,14 +44,24 @@ m_label = ttk.Label(root, wraplength=800, text="Write your pattern here. Pattern
 m_label.grid(column=1, row=2, columnspan=15, in_ = frame1, pady=(25, 0))
 write_matrix = ttk.Entry(root, width=100)
 write_matrix.grid(column=1, row=3, columnspan=15, pady=10, in_ = frame1)
-option_label = ttk.Label(root, text="Options:\nservername\nclientname\nmap\ndate [yyyy-mm, requires your files are appropriately named]\neventful [are there recorded events?]\n\nAdvanced options:\nsag [Server Alias Groups]\nsag* [SAG: store 'other' servers in other/servername]")
+option_label = ttk.Label(root, text="""Options:
+servername
+clientname
+map
+day [YYYY-MM-DD]
+month [YYYY-MM]
+year [YYYY]
+eventful [are there recorded events?]
+
+Advanced options:
+sag [Server Alias Groups]
+sag* [SAG: store 'other' servers in other/servername]""")
 option_label.grid(column=0, row=4, rowspan=4)
 
-m_rule = {"servername", "clientname", "map", "date", "game", "demproto", "netproto", "eventful", "sag", "sag*"}	#A set of options you could use
 def verify_matrix():
 	m = write_matrix.get()
 	m = set(m.split())
-	if m <= m_rule:						#if m is a subset of m_rule
+	if m <= degroot.rules:						#if m is a subset of m_rule
 		return True
 	else:
 		return False

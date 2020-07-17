@@ -6,7 +6,11 @@ import io
 import json
 import re
 import vserv
+import datetime
 from sys import *
+
+#was going to bring the validate_rule_prototype functions in here so it was unified but I decided it wouldn't really reduce LOC or improve readability/functionality
+rules = {"servername", "clientname", "map", "day", "month", "year", "game", "demproto", "netproto", "eventful", "sag", "sag*"}	#A set of options you could use
 
 global aliases
 def load_aliases(skip_ask=False):
@@ -30,6 +34,17 @@ def searchdir(_dir):
 	#I am saying: Add `f` to the list, where f is the iter object in the loop that: searches directory given. Only do this if f meets these conditions: Is a file, is .dem type, and is at least the minimum size for a demo header.	
 	return files	# a list of file NAMES
 
+#get file date, turn epoch to human readable format
+def get_date(file, format_):
+        t_epoch = os.path.getmtime(file)
+        time = datetime.datetime.fromtimestamp(t_epoch)
+        return time.strftime(format_)
+        '''
+        year_string = time.strftime("%Y")
+        month_string = time.strftime("%Y-%m")
+        day_string = time.strftime("%Y-%m-%d")
+        '''
+
 #unfurl (unpack) a specific file
 def unfurl(path):
 	with open(path, "rb") as input:
@@ -37,8 +52,8 @@ def unfurl(path):
 	demo_keys = ['header', 'demoproto', 'netproto', 'servername', 'clientname', 'map', 'game', 'time', 'ticks', 'frames', 'signon'] #a list of keys for later use. this isnt global because its zipped up.
 	try:
 		d = dict(zip(demo_keys, struct.unpack('8sii260s260s260s260sfiii', data)))	#create a dictionary from the zipping of demo_keys and the result of unpack. zip pairs As and Bs together: zip((A, B), (A, B)) => (A, A), (B, B)
-																	#8s             i    i    260s 260s 260s 260s   f      i    i    i    #I don't think this formatting will stick on other editors lol
-																	#8-byte string, int, int, 260 byte string (x4), float, int, int, int  #These should be aligned but probably aren't lol
+																	#8s             i    i    260s 260s 260s 260s   f      i    i    i    #
+																	#8-byte string, int, int, 260 byte string (x4), float, int, int, int  #
 	except:
 		return "Bad file"
 
@@ -48,9 +63,10 @@ def unfurl(path):
 
 	d['servername'] = d['servername'].replace(":", "@")	#can't have : in filenames in windows
 	#these two statements truncate our path to just the filename, then assign the key date with the first 7 chars of the file name.
-	ym = os.path.basename(path)
-	d['date'] = ym[:7] #store the date in the dictionary. This is a slice: slices are string/array/other-compatible-object[start:stop]
-	d['name'] = ym
+	d['name'] = os.path.basename(path)
+	d['day'] = get_date(path, "%Y-%m-%d")
+	d['month'] = get_date(path, "%Y-%m")
+	d['year'] = get_date(path, "%Y")
 
 	#determine what servergroup a demo is in
 	try:
@@ -80,7 +96,7 @@ def unfurl(path):
 		d['eventful'] = "no-event-info"
 	except json.JSONDecodeError:
                 d['eventful'] = "broken-json"
-                print("Warning: Error in JSON file for {}".format(ym))
+                print("Warning: Error in JSON file for {}".format(d['name']))
 	
 	return d
 
@@ -94,7 +110,6 @@ def unfurl_dir(path):
 
 #turn a prototype matrix into a real matrix string
 def assemble_matrix(prototype, demo):
-	#matrix = [demo[a] for a in prototype]
 	matrix = []
 	for item in prototype:
 		if item == "sag" or item == "sag*":
